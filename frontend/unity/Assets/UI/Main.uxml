@@ -1,0 +1,29 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="Main.uss" />
+    <ui:VisualElement class="root">
+
+        <ui:VisualElement name="list-panel" class="screen">
+            <ui:VisualElement class="header">
+                <ui:Label text="Account Records" class="screen-title" />
+                <ui:Button name="add-btn" text="+ Add" class="btn-primary" />
+            </ui:VisualElement>
+            <ui:Label name="loading-label" text="Loading..." class="center-text" style="display: none;" />
+            <ui:Label name="empty-label" text="No records yet. Click &quot;+ Add&quot; to get started." class="center-text" style="display: none;" />
+            <ui:ListView name="entries-list" style="flex-grow: 1;" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="form-panel" class="screen" style="display: none;">
+            <ui:Label name="form-title" text="Add Entry" class="screen-title" style="margin-bottom: 24px;" />
+            <ui:TextField name="amount-field" label="Amount" class="form-field" />
+            <ui:TextField name="category-field" label="Category" class="form-field" />
+            <ui:TextField name="note-field" label="Note" class="form-field" />
+            <ui:TextField name="date-field" label="Date (YYYY-MM-DD)" class="form-field" />
+            <ui:Label name="form-error-label" class="error-label" style="display: none;" />
+            <ui:VisualElement class="form-buttons">
+                <ui:Button name="cancel-btn" text="Cancel" class="btn-secondary" />
+                <ui:Button name="save-btn" text="Save" class="btn-primary" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>
