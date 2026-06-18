@@ -12,27 +12,34 @@ A full-stack personal accounting app demo. Record, edit, and delete expense/inco
 
 ## Prerequisites
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download)
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 - [Unity 6](https://unity.com/releases/editor/whats-new/6000.0.0) (open `frontend/unity/` in Unity Hub)
 
+> .NET 9 SDK is only needed if you want to run the API outside of Docker.
+
 ## Getting Started
 
-**1. Start the database**
+**1. Start the API and database**
 ```bash
-docker compose up -d
-```
-
-**2. Run the API** (from `backend/`)
-```bash
-dotnet run --project src/Api
+docker compose up -d --build
+# MySQL starts → health check passes → API starts → migrations apply automatically
 # → http://localhost:5265
-# → API docs: http://localhost:5265/scalar/v1
 ```
 
-**3. Open the Unity project**
+**2. Open the Unity project**
 
 Open `frontend/unity/` in Unity Hub, load `Assets/Scenes/SampleScene.unity`, and press Play.
+
+### Running the API without Docker (optional)
+
+Requires [.NET 9 SDK](https://dotnet.microsoft.com/download). Run from `backend/`:
+
+```bash
+docker compose up -d          # MySQL only
+dotnet run --project src/Api  # → http://localhost:5265 (migrations apply on startup)
+```
+
+API docs (Development only): `http://localhost:5265/scalar/v1`
 
 ## Architecture
 
@@ -44,7 +51,7 @@ Domain ← Application ← Infrastructure
              Api
 ```
 
-Each CRUD operation lives in its own self-contained folder under `Application/AccountEntries/` with a command/query record, a MediatR handler, and an optional FluentValidation validator. Controllers only call `_mediator.Send(...)`.
+Each CRUD operation lives in its own self-contained folder under `Application/AccountEntries/` with a command/query record, a MediatR handler, and an optional FluentValidation validator. Controllers only call `_mediator.Send(...)`. EF Core migrations are applied automatically on startup.
 
 ### Frontend — Unidirectional data flow
 
@@ -71,8 +78,9 @@ VContainer wires everything together via `Main : LifetimeScope`. Both UI panels 
 
 ```
 curd-demo/
-├── docker-compose.yml
+├── docker-compose.yml        # MySQL + API (one-command startup)
 ├── backend/
+│   ├── Dockerfile
 │   └── src/
 │       ├── Domain/           # AccountEntry entity
 │       ├── Application/      # CQRS handlers + validators
